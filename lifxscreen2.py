@@ -6,8 +6,6 @@ from PIL import ImageGrab
 import os
 from colour import Color
 import sys
-import numpy
-#import pyaudio
 import analyse
 import math
 import binascii
