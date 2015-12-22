@@ -13,9 +13,9 @@ I use this on a windows 7 64bit machine. Python version 2.7.5.
 
 ##Prerequisites:
 
-PIL (which relies on VCForPython27: http://www.microsoft.com/en-us/download/details.aspx?id=44266)
+PIL - Screen Grabber (which relies on VCForPython27: http://www.microsoft.com/en-us/download/details.aspx?id=44266)
 
-colour (https://pypi.python.org/pypi/colour/)
+colour - Colour Convertions and Manipulations  (https://pypi.python.org/pypi/colour/)
 
 lazylights - The actual LIFX controller.  https://github.com/mpapi/lazylights/tree/2.0
 
