@@ -44,7 +44,7 @@ bulbs1=[myBulb1]
 bulbs2=[myBulb2]
 
 
-# This is the Main un loop
+# This is the Main loop
 while True:
 	#init counters/accumulators
 	red   = 0
