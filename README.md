@@ -1,7 +1,7 @@
 # lifxscreen2
 LIFX Movie experience 
 Continuously calculates the average colour of your screen and sets your LIFX bulb(s) to that color
-(seeks to improve over the original lifxscreen at https://github.com/frakman1/lifxscreen2)
+(seeks_to_improve_over_the_original_lifxscreen_at_https://github.com/frakman1/lifxscreen2)
 
 - This version uses the much faster LAN protocol (vs the slower HTTP API).
 - Splits the screen into left and right segments and allows you to control two sets of bulbs independently. 
@@ -9,7 +9,7 @@ Continuously calculates the average colour of your screen and sets your LIFX bul
 - Better black screen colour handling. 
 
 
-I use this on a windows 7 64bit machine. Python version 2.7.5. 
+Tested on a Windows-7, 64bit machine. Python version 2.7.5. 
 
 ##Prerequisites:
 
