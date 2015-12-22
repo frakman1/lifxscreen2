@@ -1,5 +1,5 @@
 # lifxscreen2
-LIFX Movie experience 
+LIFX Movie experience. 
 Continuously calculates the average colour of your screen and sets your LIFX bulb(s) to that color
 
 (*seeks to improve over the original lifxscreen at https://github.com/frakman1/lifxscreen2*)
