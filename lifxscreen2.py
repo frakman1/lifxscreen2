@@ -13,8 +13,11 @@ import binascii
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 # GLOBAL DEFINES
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
-KELVIN         = 0    # 2000 to 8000, where 2000 is the warmest and 8000 is the coolest
-DECIMATE       = 10   # skip every DECIMATE number of pixels to speed up calculation
+KELVIN           = 0    # 2000 to 8000, where 2000 is the warmest and 8000 is the coolest
+DECIMATE         = 10   # skip every DECIMATE number of pixels to speed up calculation
+DURATION         = 500  # The time over which to change the colour of the lights in ms
+BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
+BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #------------------------------------------------------------------------------------------------------------
@@ -101,9 +104,9 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (c.red < 0.08)  and (c.green< 0.08) and (c.blue < 0.08): 
 		#print "black1 detected"
-		lazylights.set_state(bulbs1,0,0,0.03,5000,(500),False)
+		lazylights.set_state(bulbs1,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
-		lazylights.set_state(bulbs1,c.hue*360,(c.saturation),c.luminance,KELVIN,(500),False)
+		lazylights.set_state(bulbs1,c.hue*360,(c.saturation),c.luminance,KELVIN,(DURATION),False)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	# Clear colour accumulators in preperation for going over the second half of the screen
@@ -138,7 +141,7 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (c.red < 0.08)  and (c.green< 0.08) and (c.blue < 0.08): 
 		#print "black2 detected"
-		lazylights.set_state(bulbs2,0,0,0.03,5000,(500),False)
+		lazylights.set_state(bulbs2,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
-		lazylights.set_state(bulbs2,c.hue*360,(c.saturation),c.luminance,KELVIN,(500),False)
+		lazylights.set_state(bulbs2,c.hue*360,(c.saturation),c.luminance,KELVIN,(DURATION),False)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
