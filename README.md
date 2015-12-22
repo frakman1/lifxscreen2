@@ -6,7 +6,7 @@ Continuously calculates the average colour of your screen and sets your LIFX bul
 - This version uses the much faster LAN protocol (vs the slower HTTP API).
 - Splits the screen into left and right segments and allows you to control two sets of bulbs independently. 
 - Crops the screen so as not to take the black portion into account when calculating the average colour. 
-- Better black colour handling. 
+- Better black screen colour handling. 
 
 
 I use this on a windows 7 64bit machine. Python version 2.7.5. 
