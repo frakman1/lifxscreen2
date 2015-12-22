@@ -24,7 +24,7 @@ def createBulb(ip, macString, port = 56700):
 #------------------------------------------------------------------------------------------------------------	
 
 #Scan for bulbs 	
-bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=1)
+bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
 print bulbs
 print len(bulbs)
 
