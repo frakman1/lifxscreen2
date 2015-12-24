@@ -16,6 +16,7 @@ import binascii
 KELVIN           = 0    # 2000 to 8000, where 2000 is the warmest and 8000 is the coolest
 DECIMATE         = 10   # skip every DECIMATE number of pixels to speed up calculation
 DURATION         = 500  # The time over which to change the colour of the lights in ms
+BLACK_THRESHOLD  = 0.08 # Black Screen Detection Threshold
 BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +103,7 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# PROGRAM LIFX BULBS (LEFT)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < 0.08)  and (c.green< 0.08) and (c.blue < 0.08): 
+	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
 		#print "black1 detected"
 		lazylights.set_state(bulbs1,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
@@ -139,7 +140,7 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# PROGRAM LIFX BULBS (RIGHT)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < 0.08)  and (c.green< 0.08) and (c.blue < 0.08): 
+	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
 		#print "black2 detected"
 		lazylights.set_state(bulbs2,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
