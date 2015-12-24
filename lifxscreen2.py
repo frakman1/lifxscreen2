@@ -15,7 +15,7 @@ import binascii
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 KELVIN           = 0    # 2000 to 8000, where 2000 is the warmest and 8000 is the coolest
 DECIMATE         = 10   # skip every DECIMATE number of pixels to speed up calculation
-DURATION         = 500  # The time over which to change the colour of the lights in ms
+DURATION         = 500  # The time over which to change the colour of the lights in ms. Use 100 for faster refresh
 BLACK_THRESHOLD  = 0.08 # Black Screen Detection Threshold
 BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
