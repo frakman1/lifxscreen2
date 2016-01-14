@@ -20,6 +20,7 @@ PIL - Screen Grabber (which relies on VCForPython27: http://www.microsoft.com/en
 colour - Colour Convertions and Manipulations  (https://pypi.python.org/pypi/colour/)
 
 lazylights - The actual LIFX controller.  https://github.com/mpapi/lazylights/tree/2.0
+pip install git+https://github.com/mpapi/lazylights@2.0
 
 ##Syntax:
 
