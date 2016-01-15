@@ -1,7 +1,8 @@
 # lifxscreen2
 LIFX Movie experience. 
+Continuously calculates the average colour of your screen and sets your LIFX bulb(s) to that color.
 
-Continuously calculates the average colour of your screen and sets your LIFX bulb(s) to that color
+Watch movies *(or anything you want on your screen)* in style. Like [THIS!](https://youtu.be/WHCtUvEJXq0)
 
 (*seeks to improve over the original lifxscreen at https://github.com/frakman1/lifxscreen*)
 
@@ -25,7 +26,7 @@ Tested on a Windows-7, 64bit machine. Python version 2.7.5.
 ```pip install git+https://github.com/mpapi/lazylights@2.0```
 
 
-* Around line 41, Replace the **'XX:XX:XX:XX:XX:XX'** with the MAC addresses of your bulbs. You should be able to find the MAC Address on the bulb itself, or on your router page, or by using my iOS app [LIFX Ambience](http://lifx.technicallycorrectman.com/)
+* Around line 41 *(createBulb('10.10.10.2','XX:XX:XX:XX:XX:XX'))* , Replace both the IP address and **'XX:XX:XX:XX:XX:XX'** with the MAC addresses of your bulbs. You should be able to find the MAC Address on the bulb itself, or on your router page, or by using my iOS app [LIFX Ambience](http://lifx.technicallycorrectman.com/)
 
 ##Syntax:
 
