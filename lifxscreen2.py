@@ -6,7 +6,6 @@ from PIL import ImageGrab
 import os
 from colour import Color
 import sys
-import analyse
 import math
 import binascii
 
