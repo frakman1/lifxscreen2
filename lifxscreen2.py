@@ -60,13 +60,13 @@ def createBulb(ip, macString, port = 56700):
 #bulb2 = bulbs.pop()
 #bulbs2 = [bulb2]
 
-#myBulb1 = createBulb('10.10.10.1','d0:73:d5:02:d0:c8')
-#myBulb2 = createBulb('10.10.10.2','d0:73:d5:01:73:e9')
-myBulb3L = createBulb('10.10.10.3','d0:73:d5:02:6b:04')
-#myBulb4 = createBulb('10.10.10.4','d0:73:d5:02:e3:d0')
-myBulb5R = createBulb('10.10.10.5','d0:73:d5:00:41:6d')
-#myBulb6 = createBulb('10.10.10.6','d0:73:d5:00:96:fa')
-#myBulb7 = createBulb('10.10.10.7','d0:73:d5:02:a9:1e')
+#myBulb1 = createBulb('10.10.10.1','xx:xx:xx:xx:xx:xx')
+#myBulb2 = createBulb('10.10.10.2','xx:xx:xx:xx:xx:xx')
+myBulb3L = createBulb('10.10.10.3','xx:xx:xx:xx:xx:xx')
+#myBulb4 = createBulb('10.10.10.4','xx:xx:xx:xx:xx:xx')
+myBulb5R = createBulb('10.10.10.5','xx:xx:xx:xx:xx:xx')
+#myBulb6 = createBulb('10.10.10.6','xx:xx:xx:xx:xx:xx')
+#myBulb7 = createBulb('10.10.10.7','xx:xx:xx:xx:xx:xx')
 
 
 #print('MyBulb1: ' + str(myBulb1))
