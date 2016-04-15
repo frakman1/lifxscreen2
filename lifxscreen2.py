@@ -35,30 +35,12 @@ BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
 
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
-'''
-# Initialize PyAudio
-pyaud = pyaudio.PyAudio()
 
-# Open input stream, 16-bit mono at 44100 Hz
-# On my system, device 2 is a USB microphone, your number may differ.
-stream = pyaud.open(
-    format = pyaudio.paInt16,
-    channels = 1,
-    rate = 44100,
-    input = True)
-'''
-	
 def createBulb(ip, macString, port = 56700):        
     return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
 	
 	
 #bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
-#print bulbs
-#print len(bulbs)
-#bulb1 = bulbs.pop()
-#bulbs1 = [bulb1]
-#bulb2 = bulbs.pop()
-#bulbs2 = [bulb2]
 
 myBulb1 = createBulb('10.10.10.1','xx:xx:xx:xx:xx:xx')
 myBulb2 = createBulb('10.10.10.2','xx:xx:xx:xx:xx:xx'')
