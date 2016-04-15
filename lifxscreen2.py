@@ -35,50 +35,101 @@ BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
 
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
+'''
+# Initialize PyAudio
+pyaud = pyaudio.PyAudio()
 
+# Open input stream, 16-bit mono at 44100 Hz
+# On my system, device 2 is a USB microphone, your number may differ.
+stream = pyaud.open(
+    format = pyaudio.paInt16,
+    channels = 1,
+    rate = 44100,
+    input = True)
+'''
+	
 def createBulb(ip, macString, port = 56700):        
     return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
 	
 	
 #bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
+#print bulbs
+#print len(bulbs)
+#bulb1 = bulbs.pop()
+#bulbs1 = [bulb1]
+#bulb2 = bulbs.pop()
+#bulbs2 = [bulb2]
 
-myBulb1 = createBulb('10.10.10.1','xx:xx:xx:xx:xx:xx')
-myBulb2 = createBulb('10.10.10.2','xx:xx:xx:xx:xx:xx')
-myBulb3 = createBulb('10.10.10.3','xx:xx:xx:xx:xx:xx')
-myBulb4 = createBulb('10.10.10.4','xx:xx:xx:xx:xx:xx')
-myBulb5 = createBulb('10.10.10.5','xx:xx:xx:xx:xx:xx')
-myBulb6 = createBulb('10.10.10.6','xx:xx:xx:xx:xx:xx')
-myBulb7 = createBulb('10.10.10.7','xx:xx:xx:xx:xx:xx')
+#myBulb1 = createBulb('10.10.10.1','d0:73:d5:02:d0:c8')
+#myBulb2 = createBulb('10.10.10.2','d0:73:d5:01:73:e9')
+myBulb3L = createBulb('10.10.10.3','d0:73:d5:02:6b:04')
+#myBulb4 = createBulb('10.10.10.4','d0:73:d5:02:e3:d0')
+myBulb5R = createBulb('10.10.10.5','d0:73:d5:00:41:6d')
+#myBulb6 = createBulb('10.10.10.6','d0:73:d5:00:96:fa')
+#myBulb7 = createBulb('10.10.10.7','d0:73:d5:02:a9:1e')
 
-bulbs=[myBulb1,myBulb2,myBulb3,myBulb4,myBulb5,myBulb6,myBulb7]
+
+#print('MyBulb1: ' + str(myBulb1))
+#print('MyBulb2: ' + str(myBulb2))
+#bulbs=[myBulb1,myBulb2,myBulb3,myBulb4,myBulb5,myBulb6,myBulb7]
+bulbsL=[myBulb3L]
+bulbsR=[myBulb5R]
+
+#sys.exit(1)
+
+#print bulb1
+#print bulb2
+#print bulbs1
+#print bulbs2
+
+    
+
 
 # run loop
 while True:
+	
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	# CALCULATE SCREEN COLOUR
+	# CALCULATE AVERAGE SCREEN COLOUR
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	image = ImageGrab.grab()  # take a screenshot
 	thumb = image.resize((128,128),Image.ANTIALIAS)
+	
+
+	w, h = thumb.size
+	left  = thumb.crop((0, 0, w/2, h))
+	right = thumb.crop((w/2, 0, w, h))
+
 	#print image.size
-	palette = extract_colors(thumb)
+
+	paletteL = extract_colors(left)
+	paletteR = extract_colors(right)
+    #''':type : colorific.palette.Palette'''
+
 	#print("Colors: ", ', '.join(rgb_to_hex(c.value) for c in palette.colors))
-	for c1 in palette.colors:
+	for c1L in paletteL.colors:
 		#c = Color(c1)
-		print('colors: ' + str(c1))
-		c= Color(rgb=(c1.value[0]/255.0,c1.value[1]/255.0,c1.value[2]/255.0))
+		#print('colorsL: ' + str(c1L))
+		cL= Color(rgb=(c1L.value[0]/255.0,c1L.value[1]/255.0,c1L.value[2]/255.0))
 
-
-	
-#	palette = extract_colors(area,min_saturation=config.MIN_SATURATION,min_prominence=config.MIN_PROMINENCE,min_distance=config.MIN_DISTANCE,max_colors=config.MAX_COLORS,n_quantized=config.N_QUANTIZED)
-#	print_colors(palette)
-#	lazylights.set_state(bulbs,c.hue*360,(c.saturation),c.luminance,KELVIN,(750),False)
-
-	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
+	if (cL.red < BLACK_THRESHOLD)  and (cL.green < BLACK_THRESHOLD) and (cL.blue < BLACK_THRESHOLD): 
 		#print "black1 detected"
-		lazylights.set_state(bulbs,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(750),False)
+		lazylights.set_state(bulbsL,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(750),False)
 	else:
-		lazylights.set_state(bulbs,c.hue*360,(c.saturation),c.luminance,KELVIN,(750),False)
+		lazylights.set_state(bulbsL,cL.hue*360,(cL.saturation),cL.luminance,KELVIN,(750),False)
 
-	
+########################################################################################################################	
+########################################################################################################################	
+
+	#print("Colors: ", ', '.join(rgb_to_hex(c.value) for c in palette.colors))
+	for c1R in paletteR.colors:
+		#c = Color(c1)
+		print('colorsR: ' + str(c1R))
+		cR= Color(rgb=(c1R.value[0]/255.0,c1R.value[1]/255.0,c1R.value[2]/255.0))
+
+	if (cR.red < BLACK_THRESHOLD)  and (cR.green < BLACK_THRESHOLD) and (cR.blue < BLACK_THRESHOLD): 
+		#print "black1 detected"
+		lazylights.set_state(bulbsR,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(750),False)
+	else:
+		lazylights.set_state(bulbsR,cR.hue*360,(cR.saturation),cR.luminance,KELVIN,(750),False)
 
 
