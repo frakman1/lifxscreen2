@@ -43,7 +43,7 @@ def createBulb(ip, macString, port = 56700):
 #bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
 
 myBulb1 = createBulb('10.10.10.1','xx:xx:xx:xx:xx:xx')
-myBulb2 = createBulb('10.10.10.2','xx:xx:xx:xx:xx:xx'')
+myBulb2 = createBulb('10.10.10.2','xx:xx:xx:xx:xx:xx')
 myBulb3 = createBulb('10.10.10.3','xx:xx:xx:xx:xx:xx')
 myBulb4 = createBulb('10.10.10.4','xx:xx:xx:xx:xx:xx')
 myBulb5 = createBulb('10.10.10.5','xx:xx:xx:xx:xx:xx')
