@@ -1,147 +1,216 @@
 # Author: Frak Al-Nuaimy 
 # email: frakman@hotmail.com
+from threading import Thread
+import threading
 import lazylights
 import time
 from PIL import ImageGrab
+from PIL import Image
 import os
 from colour import Color
 import sys
 import math
 import binascii
+from colorific.palette import extract_colors, rgb_to_hex
 
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 # GLOBAL DEFINES
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
-KELVIN           = 0    # 2000 to 8000, where 2000 is the warmest and 8000 is the coolest
-DECIMATE         = 10   # skip every DECIMATE number of pixels to speed up calculation
-DURATION         = 500  # The time over which to change the colour of the lights in ms. Use 100 for faster transitions
+#HEIGHT         = 1920   #now using image.size[1] dynamically
+#WIDTH          = 1200   #now using image.size[0] dynamically
+LOOP_INTERVAL  = 1    # how often we calculate screen colour (in seconds)
+DURATION       = 500    # how long it takes bulb to switch colours (in seconds)
+KELVIN         = 0
+DECIMATE       = 10   # skip every DECIMATE number of pixels to speed up calculation
+#get your unit-unique token from http://developer.lifx.com/ and use it here
+TOKEN          = "c590be9f9c544d4418437b774b3a5ab1df1966cd52c9dc3aa0d08f5f5f5b4fa7" 
+BULB_NAME      = "all"  # you can use any label you've assigned your bulb here
 BLACK_THRESHOLD  = 0.08 # Black Screen Detection Threshold
 BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
-#//////////////////////////////////////////////////////////////////////////////////////////////////////////
+paletteL=0
+paletteR=0
+bulbsL = []
+bulbsR = []
 
-#------------------------------------------------------------------------------------------------------------
-# I use this to manually create a bulb using IP and MAC address. 
+lock = threading.Lock()
+run_once = 0
+
+def runL():
+	global bulbsL
+	global bulbsR
+	global lock
+	
+	while True:
+		global paletteL
+		with lock:
+			#print 'Left\n'
+			if paletteL.bgcolor:
+				#print (type(paletteL.bgcolor))
+				print("BackgroundL: ", rgb_to_hex(paletteL.bgcolor.value))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[0]))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[1]))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[2]))
+				cB= Color(rgb=(paletteL.bgcolor.value[0]/255.0,paletteL.bgcolor.value[1]/255.0,paletteL.bgcolor.value[2]/255.0))
+				lazylights.set_state(bulbsL,cB.hue*360.0,cB.saturation,cB.luminance/3.0,BLACK_KELVIN,(DURATION),False)
+				time.sleep(0)
+				continue
+			
+			if paletteL.colors[0].prominence <0.001:
+				print("prominenceL: ", str(paletteL.colors[0].prominence))
+				lazylights.set_state(bulbsL,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+				time.sleep(0)
+				continue
+
+
+			cL= Color(rgb=(paletteL.colors[0].value[0]/255.0,paletteL.colors[0].value[1]/255.0,paletteL.colors[0].value[2]/255.0))
+			#print cL
+			lazylights.set_state(bulbsL,cL.hue*360.0,(cL.saturation),cL.luminance,KELVIN,(DURATION),False)
+			time.sleep(0)
+			'''
+			#print('colorsL: ' + str(cL))
+			if paletteL.bgcolor:
+				#print (type(paletteL.bgcolor))
+				#print("BackgroundL: ", rgb_to_hex(paletteL.bgcolor.value))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[0]))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[1]))
+				#print("BackgroundL: ", (paletteL.bgcolor.value[2]))
+				cB= Color(rgb=(paletteL.bgcolor.value[0]/255.0,paletteL.bgcolor.value[1]/255.0,paletteL.bgcolor.value[2]/255.0))
+				lazylights.set_state(bulbsL,cB.hue*360.0,cB.saturation,cB.luminance/2.0,BLACK_KELVIN,(DURATION),False)
+				continue
+			if paletteL.colors[0].prominence <0.001:
+				print("prominenceL: ", str(paletteL.colors[0].prominence))
+				lazylights.set_state(bulbsL,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+				continue
+			if (cL.red < BLACK_THRESHOLD)  and (cL.green < BLACK_THRESHOLD) and (cL.blue < BLACK_THRESHOLD): 
+				#print "black1 detected"
+				lazylights.set_state(bulbsL,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+			else:
+				lazylights.set_state(bulbsL,cL.hue*360.0,(cL.saturation),cL.luminance+0.2,KELVIN,(DURATION),False)
+			'''
+			
+
+def runR():
+	global bulbsL
+	global bulbsR
+	global lock
+	while True:
+		global paletteR
+		with lock:
+			#print 'Right\n'
+			if paletteR.bgcolor:
+				#print (type(paletteL.bgcolor))
+				print("BackgroundR: ", rgb_to_hex(paletteR.bgcolor.value))
+				#print("BackgroundR: ", (paletteR.bgcolor.value[0]))
+				#print("BackgroundR: ", (paletteR.bgcolor.value[1]))
+				#print("BackgroundR: ", (paletteR.bgcolor.value[2]))
+				cB= Color(rgb=(paletteR.bgcolor.value[0]/255.0,paletteR.bgcolor.value[1]/255.0,paletteR.bgcolor.value[2]/255.0))
+				lazylights.set_state(bulbsR,cB.hue*360.0,cB.saturation,cB.luminance/3.0,BLACK_KELVIN,(DURATION),False)
+				time.sleep(0)
+				continue
+			
+			if paletteR.colors[0].prominence <0.001:
+				print("prominenceR: ", str(paletteR.colors[0].prominence))
+				lazylights.set_state(bulbsR,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+				time.sleep(0)
+				continue
+			
+			cR= Color(rgb=(paletteR.colors[0].value[0]/255.0,paletteR.colors[0].value[1]/255.0,paletteR.colors[0].value[2]/255.0))
+			#print cR
+			#print paletteR.colors[0].value[0]
+			#print paletteR.colors[0].value[1]
+			#print paletteR.colors[0].value[2]
+			
+			lazylights.set_state(bulbsR,cR.hue*360.0,(cR.saturation),cR.luminance,KELVIN,(DURATION),False)
+			time.sleep(0)
+			'''
+			#print((cR))
+			if paletteR.bgcolor:
+				print("BackgroundR: ", rgb_to_hex(paletteR.bgcolor.value))
+				cB= Color(rgb=(paletteR.bgcolor.value[0]/255.0,paletteR.bgcolor.value[1]/255.0,paletteR.bgcolor.value[2]/255.0))
+				lazylights.set_state(bulbsR,cB.hue*360.0,cB.saturation,cB.luminance/2.0,BLACK_KELVIN,(DURATION),False)
+				continue
+			if paletteR.colors[0].prominence <0.001:
+				print("prominenceR: ", str(paletteR.colors[0].prominence))
+				lazylights.set_state(bulbsR,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+				continue
+			if (cR.red < BLACK_THRESHOLD)  and (cR.green < BLACK_THRESHOLD) and (cR.blue < BLACK_THRESHOLD): 
+				#print "black1 detected"
+				lazylights.set_state(bulbsR,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
+			else:
+				#print cR.hue
+				#rgb2hsl()
+				lazylights.set_state(bulbsR,cR.hue*360.0,(cR.saturation),cR.luminance+0.2,KELVIN,(DURATION),False)
+			'''
+			
+			
+def runCap():
+	global paletteL 
+	global paletteR
+	global lock
+	global run_once
+	while True:
+		#lock.acquire()
+		with lock:
+			#print '************************** CAPTURE THREAD ************************** '
+			image = ImageGrab.grab()  # take a screenshot
+			left   = 50
+			top    = 150
+			width  = 500
+			height = 350
+			box    = (left, top, left+width, top+height)
+			area   = image.crop(box)
+			#area.show()
+			#sys.exit(1)
+			thumb = area.resize((128,128),Image.ANTIALIAS)
+
+			#thumb = image.resize((128,128),Image.ANTIALIAS)
+			#thumb.show()
+			#sys.exit(1)
+			
+			w, h = thumb.size
+			left  = thumb.crop((0, 0, w/2, h))
+			right = thumb.crop((w/2, 0, w, h))
+			
+			#print image.size
+			#right.show()
+			#sys.exit(1)
+
+			
+			paletteL = extract_colors(left)
+			paletteR = extract_colors(right)
+			
+			#print paletteL
+			#print paletteR
+			
+			if run_once == 0:
+				print ("Running once")
+				tl = Thread(target = runL)
+				tr = Thread(target = runR)
+				tl.setDaemon(True)
+				tr.setDaemon(True)
+				tl.start()
+				tr.start()
+				run_once = 1
+	#		lock.release()
+			#print '************************** END CAPTURE THREAD ************************** '
+			time.sleep(0)
 def createBulb(ip, macString, port = 56700):        
     return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
-#------------------------------------------------------------------------------------------------------------	
+	
+if __name__ == "__main__":
+	myBulb1 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
+	myBulb2 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
+	myBulb3 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
+	
+	bulbsL=[myBulb1]
+	bulbsR=[myBulb2,myBulb3]
 
-#Scan for bulbs 	
-bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
-print bulbs
-print len(bulbs)
+	tCap = Thread(target = runCap)
 
-if (len(bulbs)==0):
-    print "No LIFX bulbs found. Make sure you're on the same WiFi network and try again"
-    sys.exit(1)
+	tCap.setDaemon(True)
 
-
-#These are my two bulbs. I get the values ahead of time from my router info page
-myBulb1 = createBulb('10.10.10.2','XX:XX:XX:XX:XX:XX')  #Bulb for left  side of screen
-myBulb2 = createBulb('10.10.10.1','XX:XX:XX:XX:XX:XX')  #Bulb for right side of screen
-#print('MyBulb1: ' + str(myBulb1))
-#print('MyBulb2: ' + str(myBulb2))
-
-#lazylights requires a 'set' of bulbs as input so I put each one in its own set
-bulbs1=[myBulb1]
-bulbs2=[myBulb2]
-
-
-# This is the Main loop
-while True:
-	#init counters/accumulators
-	red   = 0
-	green = 0
-	blue  = 0
+	tCap.start()
+	while True:
+		pass
 	
-	# take a screenshot
-	image = ImageGrab.grab()  
-	#print image.size
-	
-	# Crop a chunk of the screen out
-	# This is hacky and is currently screen and movie-size specific. 
-	# To get these values, I take a screenshot and use Paint.Net to easily find the coordinates
-	# TODO: clean this up and make it dynamically detect size and crop the black bits out automagically
-	left   = 0      # The x-offset of where your crop box starts
-	top    = 140    # The y-offset of where your crop box starts
-	width  = 1920   # The width  of crop box
-	height = 800    # The height of crop box
-	box    = (left, top, left+width, top+height)
-	area   = image.crop(box)
-	#print area.size
-	
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	# Left Side of Screen
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for y in range(0, area.size[1], DECIMATE):  #loop over the height
-		for x in range(0, area.size[0]/2, DECIMATE):  #loop over the width (half the width in this case)
-			#print "\n coordinates   x:%d y:%d \n" % (x,y)
-			color = area.getpixel((x, y))  #grab a pixel
-			# calculate sum of each component (RGB)
-			red = red + color[0]
-			green = green + color[1]
-			blue = blue + color[2]
-			#print red + " " +  green + " " + blue
-			#print "\n totals   red:%s green:%s blue:%s\n" % (red,green,blue)
-			#print color
-	#print(time.clock())
-	
-	# calculate the averages
-	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	
-	# generate a composite colour from these averages
-	c = Color(rgb=(red, green, blue))  
-	#print c
-	
-	#print "\naverage1  red:%s green:%s blue:%s" % (red,green,blue)
-	#print "average1   hue:%f saturation:%f luminance:%f" % (c.hue,c.saturation,c.luminance)
-	#print "average1  (hex) "+  (c.hex)
-	
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	# PROGRAM LIFX BULBS (LEFT)
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
-		#print "black1 detected"
-		lazylights.set_state(bulbs1,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
-	else:
-		lazylights.set_state(bulbs1,c.hue*360,(c.saturation),c.luminance,KELVIN,(DURATION),False)
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	# Clear colour accumulators in preperation for going over the second half of the screen
-	red   = 0
-	green = 0
-	blue  = 0
-
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	# Right Side of Screen
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for y in range(0, area.size[1], DECIMATE):  #loop over the height
-		for x in range(area.size[0]/2, area.size[0], DECIMATE):  #loop over the width (the second half of the width)
-			#print "\n coordinates   x:%d y:%d \n" % (x,y)
-			color = area.getpixel((x, y))  #grab a pixel
-			# calculate sum of each component (RGB)
-			red = red + color[0]
-			green = green + color[1]
-			blue = blue + color[2]
-	
-	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	c = Color(rgb=(red, green, blue))  
-	#print c
-	
-	#print "\naverage   red:%s green:%s blue:%s" % (red,green,blue)
-	#print "average2   hue:%f saturation:%f luminance:%f" % (c.hue,c.saturation,c.luminance)
-	#print "average  (hex) "+  (c.hex)
-	
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	# PROGRAM LIFX BULBS (RIGHT)
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
-		#print "black2 detected"
-		lazylights.set_state(bulbs2,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
-	else:
-		lazylights.set_state(bulbs2,c.hue*360,(c.saturation),c.luminance,KELVIN,(DURATION),False)
-	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
