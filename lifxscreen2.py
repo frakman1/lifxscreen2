@@ -12,6 +12,7 @@ import sys
 import math
 import binascii
 from colorific.palette import extract_colors, rgb_to_hex
+from operator import itemgetter
 
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 # GLOBAL DEFINES
@@ -21,6 +22,7 @@ from colorific.palette import extract_colors, rgb_to_hex
 LOOP_INTERVAL  = 1    # how often we calculate screen colour (in seconds)
 DURATION       = 500    # how long it takes bulb to switch colours (in seconds)
 KELVIN         = 0
+DECIMATE       = 10   # skip every DECIMATE number of pixels to speed up calculation
 BLACK_THRESHOLD  = 0.08 # Black Screen Detection Threshold
 BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
@@ -41,6 +43,7 @@ def runL():
 		global paletteL
 		with lock:
 			#print 'Left\n'
+			'''
 			if paletteL.bgcolor:
 				#print (type(paletteL.bgcolor))
 				print("BackgroundL: ", rgb_to_hex(paletteL.bgcolor.value))
@@ -58,10 +61,11 @@ def runL():
 				time.sleep(0)
 				continue
 
-
-			cL= Color(rgb=(paletteL.colors[0].value[0]/255.0,paletteL.colors[0].value[1]/255.0,paletteL.colors[0].value[2]/255.0))
+			'''
+			#cL= Color(rgb=(paletteL.colors[0].value[0]/255.0,paletteL.colors[0].value[1]/255.0,paletteL.colors[0].value[2]/255.0))
+			
 			#print cL
-			lazylights.set_state(bulbsL,cL.hue*360.0,(cL.saturation),cL.luminance,KELVIN,(DURATION),False)
+			lazylights.set_state(bulbsL,paletteL.hue*360.0,(paletteL.saturation),1,KELVIN,(DURATION),False)
 			time.sleep(0)
 			'''
 			#print('colorsL: ' + str(cL))
@@ -94,6 +98,7 @@ def runR():
 		global paletteR
 		with lock:
 			#print 'Right\n'
+			'''
 			if paletteR.bgcolor:
 				#print (type(paletteL.bgcolor))
 				print("BackgroundR: ", rgb_to_hex(paletteR.bgcolor.value))
@@ -117,7 +122,9 @@ def runR():
 			#print paletteR.colors[0].value[1]
 			#print paletteR.colors[0].value[2]
 			
-			lazylights.set_state(bulbsR,cR.hue*360.0,(cR.saturation),cR.luminance,KELVIN,(DURATION),False)
+			lazylights.set_state(bulbsR,cR.hue*360.0,(cR.saturation),1,KELVIN,(DURATION),False)
+			'''
+			lazylights.set_state(bulbsR,paletteR.hue*360.0,(paletteR.saturation),1,KELVIN,(DURATION),False)
 			time.sleep(0)
 			'''
 			#print((cR))
@@ -150,7 +157,7 @@ def runCap():
 		with lock:
 			#print '************************** CAPTURE THREAD ************************** '
 			image = ImageGrab.grab()  # take a screenshot
-			left   = 50
+			left   = 100
 			top    = 150
 			width  = 500
 			height = 350
@@ -168,17 +175,66 @@ def runCap():
 			left  = thumb.crop((0, 0, w/2, h))
 			right = thumb.crop((w/2, 0, w, h))
 			
-			#print image.size
-			#right.show()
-			#sys.exit(1)
-
+			#rl,gl,bl = average_image_color(left)
+			#rr,gr,br = average_image_color(right)
+			#paletteL =  Color(rgb=(rl,gl,bl))
+			#paletteR =  Color(rgb=(rr,gr,br))
 			
-			paletteL = extract_colors(left)
+			colorsR = right.convert('RGB').getcolors(10000)
+			#print colorsR
+			if colorsR != None:
+				sortedR = sorted(colorsR, key=itemgetter(0), reverse=True)	
+				#print "****************"
+				#print sortedR[0][1]
+				#print (sortedR[0][1][0])/255.0
+				#sys.exit(1)
+				paletteR =  Color(rgb=((sortedR[0][1][0])/255.0,(sortedR[0][1][1])/255.0,(sortedR[0][1][2])/255.0))
+				#print "right:"+str(paletteR)
+			#print "Left: "+str(paletteL)
+			#print "Right: "+str(paletteR)
+			colorsL = left.convert('RGB').getcolors(10000)
+			#print colorsR
+			if colorsL != None:
+				sortedL = sorted(colorsL, key=itemgetter(0), reverse=True)	
+				#print "****************"
+				#print sortedR[0][1]
+				#print (sortedR[0][1][0])/255.0
+				#sys.exit(1)
+				paletteL =  Color(rgb=((sortedL[0][1][0])/255.0,(sortedL[0][1][1])/255.0,(sortedL[0][1][2])/255.0))
+				#	print "left:"+str(paletteL)
+			#print "Left: "+str(paletteL)
+			#print "Right: "+str(paletteR)
+			
+			
+			#print image.size
+			#left.show()
+			#sys.exit(1)
+			'''
+			hl = left.histogram()
+			hr = right.histogram()
+			# split into red, green, blue
+			rl = hl[0:256]
+			gl = hl[256:256*2]
+			bl = hl[256*2: 256*3]
+
+			# perform the weighted average of each channel:
+			# the *index* is the channel value, and the *value* is its weight
+			x=sum( i*w for i, w in enumerate(rl) ) / sum(rl);
+			print x
+			y=sum( i*w for i, w in enumerate(gl) ) / sum(gl);
+			print y
+			z=sum( i*w for i, w in enumerate(bl) ) / sum(bl);
+			print z
+			paletteL =  Color(rgb=(x/255.0,y/255.0,z/255.0))
+			print paletteL
+			#sys.exit(1)
+						
+			#paletteL = extract_colors(left)
 			paletteR = extract_colors(right)
 			
 			#print paletteL
 			#print paletteR
-			
+			'''
 			if run_once == 0:
 				print ("Running once")
 				tl = Thread(target = runL)
@@ -194,19 +250,44 @@ def runCap():
 def createBulb(ip, macString, port = 56700):        
     return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
 	
-if __name__ == "__main__":
-	myBulb1 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
-	myBulb2 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
-	myBulb3 = createBulb('x.x.x.x','xx:xx:xx:xx:xx:xx')
 	
-	bulbsL=[myBulb1]
-	bulbsR=[myBulb2,myBulb3]
+	
+def average_image_color(image):
+	i = image
+	h = i.histogram()
 
+	# split into red, green, blue
+	r = h[0:256]
+	g = h[256:256*2]
+	b = h[256*2: 256*3]
+
+	# perform the weighted average of each channel:
+	# the *index* is the channel value, and the *value* is its weight
+	return (
+		(sum( i*w for i, w in enumerate(r) ) / sum(r))/255.0,
+		(sum( i*w for i, w in enumerate(g) ) / sum(g))/255.0,
+		(sum( i*w for i, w in enumerate(b) ) / sum(b))/255.0
+	)
+	
+if __name__ == "__main__":
+	myBulbWhitey1 = createBulb('xxxxxxxxxxxxxxxxxxxxxx')
+	myBulbWonky = createBulb('xxxxxxxxxxxxxxxxxxxxxxxxxx')
+	myBulbPC = createBulb('xxxxxxxxxxxxxxxxxxxxxx')
+	
+	bulbsL=[myBulbWhitey1]
+	bulbsR=[myBulbWonky,myBulbPC]
+
+#	tl = Thread(target = runL)
+#	tr = Thread(target = runR)
 	tCap = Thread(target = runCap)
 
+#	tl.setDaemon(True)
+#	tr.setDaemon(True)
 	tCap.setDaemon(True)
 
 	tCap.start()
+#	tl.start()
+#	tr.start()
 	while True:
 		pass
 	
