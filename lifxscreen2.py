@@ -21,10 +21,6 @@ from colorific.palette import extract_colors, rgb_to_hex
 LOOP_INTERVAL  = 1    # how often we calculate screen colour (in seconds)
 DURATION       = 500    # how long it takes bulb to switch colours (in seconds)
 KELVIN         = 0
-DECIMATE       = 10   # skip every DECIMATE number of pixels to speed up calculation
-#get your unit-unique token from http://developer.lifx.com/ and use it here
-TOKEN          = "c590be9f9c544d4418437b774b3a5ab1df1966cd52c9dc3aa0d08f5f5f5b4fa7" 
-BULB_NAME      = "all"  # you can use any label you've assigned your bulb here
 BLACK_THRESHOLD  = 0.08 # Black Screen Detection Threshold
 BLACK_BRIGHTNESS = 0.03 # Black Screen case's brightness setting
 BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
