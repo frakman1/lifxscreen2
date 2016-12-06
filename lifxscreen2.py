@@ -1,4 +1,4 @@
-# Author: Frak Al-Nuaimy 
+# Author: Frak Al-Nuaimy
 # email: frakman@hotmail.com
 import lazylights
 import time
@@ -21,12 +21,12 @@ BLACK_KELVIN     = 5000 # Black Screen case's Kelvin setting
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #------------------------------------------------------------------------------------------------------------
-# I use this to manually create a bulb using IP and MAC address. 
-def createBulb(ip, macString, port = 56700):        
+# I use this to manually create a bulb using IP and MAC address.
+def createBulb(ip, macString, port = 56700):
     return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
-#------------------------------------------------------------------------------------------------------------	
+#------------------------------------------------------------------------------------------------------------
 
-#Scan for bulbs 	
+#Scan for bulbs
 bulbs = lazylights.find_bulbs(expected_bulbs=2,timeout=5)
 print bulbs
 print len(bulbs)
@@ -53,13 +53,9 @@ while True:
 	red   = 0
 	green = 0
 	blue  = 0
-	
-	# take a screenshot
-	image = ImageGrab.grab()  
-	#print image.size
-	
+
 	# Crop a chunk of the screen out
-	# This is hacky and is currently screen and movie-size specific. 
+	# This is hacky and is currently screen and movie-size specific.
 	# To get these values, I take a screenshot and use Paint.Net to easily find the coordinates
 	# TODO: clean this up and make it dynamically detect size and crop the black bits out automagically
 	left   = 0      # The x-offset of where your crop box starts
@@ -67,9 +63,11 @@ while True:
 	width  = 1920   # The width  of crop box
 	height = 800    # The height of crop box
 	box    = (left, top, left+width, top+height)
-	area   = image.crop(box)
-	#print area.size
-	
+
+	# take a screenshot
+	image = ImageGrab.grab(bbox=box)
+
+
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# Left Side of Screen
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,30 +83,30 @@ while True:
 			#print "\n totals   red:%s green:%s blue:%s\n" % (red,green,blue)
 			#print color
 	#print(time.clock())
-	
+
 	# calculate the averages
 	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
 	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
 	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	
+
 	# generate a composite colour from these averages
-	c = Color(rgb=(red, green, blue))  
+	c = Color(rgb=(red, green, blue))
 	#print c
-	
+
 	#print "\naverage1  red:%s green:%s blue:%s" % (red,green,blue)
 	#print "average1   hue:%f saturation:%f luminance:%f" % (c.hue,c.saturation,c.luminance)
 	#print "average1  (hex) "+  (c.hex)
-	
+
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# PROGRAM LIFX BULBS (LEFT)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
+	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD):
 		#print "black1 detected"
 		lazylights.set_state(bulbs1,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
 		lazylights.set_state(bulbs1,c.hue*360,(c.saturation),c.luminance,KELVIN,(DURATION),False)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	# Clear colour accumulators in preperation for going over the second half of the screen
 	red   = 0
 	green = 0
@@ -125,21 +123,21 @@ while True:
 			red = red + color[0]
 			green = green + color[1]
 			blue = blue + color[2]
-	
+
 	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
 	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
 	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	c = Color(rgb=(red, green, blue))  
+	c = Color(rgb=(red, green, blue))
 	#print c
-	
+
 	#print "\naverage   red:%s green:%s blue:%s" % (red,green,blue)
 	#print "average2   hue:%f saturation:%f luminance:%f" % (c.hue,c.saturation,c.luminance)
 	#print "average  (hex) "+  (c.hex)
-	
+
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# PROGRAM LIFX BULBS (RIGHT)
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD): 
+	if (c.red < BLACK_THRESHOLD)  and (c.green < BLACK_THRESHOLD) and (c.blue < BLACK_THRESHOLD):
 		#print "black2 detected"
 		lazylights.set_state(bulbs2,0,0,BLACK_BRIGHTNESS,BLACK_KELVIN,(DURATION),False)
 	else:
