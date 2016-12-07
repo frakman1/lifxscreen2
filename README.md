@@ -16,7 +16,7 @@ Tested on a Windows-7, 64bit machine. Python version 2.7.5.
 
 ##Prerequisites:
 
-* PIL - Screen Grabber (which relies on VCForPython27: http://www.microsoft.com/en-us/download/details.aspx?id=44266)
+* [PIL](http://effbot.org/downloads) - Screen Grabber which relies on [VCForPython27](http://www.microsoft.com/en-us/download/details.aspx?id=44266)
 
 * colour - Colour Convertions and Manipulations  (https://pypi.python.org/pypi/colour/)
 
