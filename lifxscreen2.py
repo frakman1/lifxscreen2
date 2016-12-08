@@ -71,10 +71,10 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# Left Side of Screen
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for y in range(0, area.size[1], DECIMATE):  #loop over the height
-		for x in range(0, area.size[0]/2, DECIMATE):  #loop over the width (half the width in this case)
+	for y in range(0, height, DECIMATE):  #loop over the height
+		for x in range(0, width/2, DECIMATE):  #loop over the width (half the width in this case)
 			#print "\n coordinates   x:%d y:%d \n" % (x,y)
-			color = area.getpixel((x, y))  #grab a pixel
+			color = image.getpixel((x, y))  #grab a pixel
 			# calculate sum of each component (RGB)
 			red = red + color[0]
 			green = green + color[1]
@@ -85,9 +85,9 @@ while True:
 	#print(time.clock())
 
 	# calculate the averages
-	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
+	red = (( red / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
+	green = ((green / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
+	blue = ((blue / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
 
 	# generate a composite colour from these averages
 	c = Color(rgb=(red, green, blue))
@@ -115,18 +115,18 @@ while True:
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	# Right Side of Screen
 	#//////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for y in range(0, area.size[1], DECIMATE):  #loop over the height
-		for x in range(area.size[0]/2, area.size[0], DECIMATE):  #loop over the width (the second half of the width)
+	for y in range(0, height, DECIMATE):  #loop over the height
+		for x in range(width/2, width, DECIMATE):  #loop over the width (the second half of the width)
 			#print "\n coordinates   x:%d y:%d \n" % (x,y)
-			color = area.getpixel((x, y))  #grab a pixel
+			color = image.getpixel((x, y))  #grab a pixel
 			# calculate sum of each component (RGB)
 			red = red + color[0]
 			green = green + color[1]
 			blue = blue + color[2]
 
-	red = (( red / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	green = ((green / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
-	blue = ((blue / ( (area.size[1]/DECIMATE) * (area.size[0]/DECIMATE) ) ) )/255.0
+	red = (( red / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
+	green = ((green / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
+	blue = ((blue / ( (height/DECIMATE) * (width/DECIMATE) ) ) )/255.0
 	c = Color(rgb=(red, green, blue))
 	#print c
 
