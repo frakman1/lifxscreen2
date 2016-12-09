@@ -1,0 +1,5 @@
+colour==0.1.2
+EasyProcess==0.2.3
+lazylights==2.0.0rc1
+Pillow==3.4.2
+pyscreenshot==0.4.2
