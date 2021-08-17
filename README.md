@@ -6,6 +6,9 @@ Continuously calculates the average colour of your screen and sets your LIFX bul
 
 Watch movies *(or anything you want on your screen)* in style. Like [THIS!](https://youtu.be/WHCtUvEJXq0)
 
+![image](https://user-images.githubusercontent.com/5826484/129788092-e4969cd2-8238-430c-a69d-73ffbd7870a3.png)
+
+
 (*seeks to improve over the original lifxscreen at https://github.com/frakman1/lifxscreen*)
 
 - This version uses the much faster LAN protocol (vs the slower HTTP API).
