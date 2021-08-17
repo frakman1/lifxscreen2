@@ -31,7 +31,10 @@ Tested on a Windows-7, 64bit machine. Python version 2.7.5.
 ```pip install git+https://github.com/mpapi/lazylights@2.0```
 
 
-* Around line 41 *(createBulb('10.10.10.2','XX:XX:XX:XX:XX:XX'))* , Replace both the IP address and **'XX:XX:XX:XX:XX:XX'** with the MAC addresses of your bulbs. You should be able to find the MAC Address on the bulb itself, or on your router page, or by using my iOS app [LIFX Ambience](http://lifx.technicallycorrectman.com/)
+* Around line 41 *(createBulb('10.10.10.2','XX:XX:XX:XX:XX:XX'))* , Replace both the IP address and **'XX:XX:XX:XX:XX:XX'** with the MAC addresses of your bulbs. You should be able to find the MAC Address on the bulb itself, or on your router page, or by using my iOS app [LIFX Ambience](https://apps.apple.com/au/app/lifx-ambience/id1012474625#?platform=iphone)
+
+![image](https://user-images.githubusercontent.com/5826484/129788952-ddad1de1-9379-4bfb-a2d7-b4e6a784d3ad.png)
+
 
 ##Syntax:
 
