@@ -19,7 +19,7 @@ Watch movies *(or anything you want on your screen)* in style. Like [THIS!](http
 
 Tested on a Windows-7, 64bit machine. Python version 2.7.5. 
 
-##Prerequisites:
+## Prerequisites:
 
 * [PIL](http://effbot.org/downloads) - Screen Grabber which relies on [VCForPython27](http://www.microsoft.com/en-us/download/details.aspx?id=44266)
 
@@ -36,7 +36,7 @@ Tested on a Windows-7, 64bit machine. Python version 2.7.5.
 ![image](https://user-images.githubusercontent.com/5826484/129788952-ddad1de1-9379-4bfb-a2d7-b4e6a784d3ad.png)
 
 
-##Syntax:
+## Syntax:
 
 ```
 python lifxscreen2.py
