@@ -41,3 +41,4 @@ Tested on a Windows-7, 64bit machine. Python version 2.7.5.
 ```
 python lifxscreen2.py
 ```
+...trivial change
