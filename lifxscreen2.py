@@ -1,5 +1,4 @@
-# Author: Frak Al-Nuaimy
-# email: frakman@hotmail.com
+# Author: Frak
 import lazylights
 import time
 from PIL import ImageGrab
